@@ -83,12 +83,23 @@ export const sendMessage = async (req, res) => {
 
     setTimeout(async () => {
       try {
-        const response = await fetch("https://your-energy.b.goit.study/api/quote");
-          const quote = await response.json();
-          console.log(quote);
+        
+        const response = await fetch("https://api.api-ninjas.com/v1/quotes?category=happiness", {
+          method: 'GET',
+          headers: {
+            'X-Api-Key': "ZDpZREeSrK7uQjXLA8LwQQ==bnQM5ru2F9xUVmsQ", // Add your API key here  
+            'Content-Type': 'application/json', // Optional: specify the content type
+          }
+        });
+        // console.log(response.text);
+        const data = await response.json();
+       
+        
+          const quote = data[0].quote;
+          
           
         const autoMessage = {
-          text: quote.quote,
+          text: quote,
           sender: "Bot",
           timestamp: new Date(),
         };
@@ -97,7 +108,7 @@ export const sendMessage = async (req, res) => {
           console.log(autoMessage);
           
         await chat.save();
-        req.io.emit('newMessage', autoMessage);
+        global.io.emit('newMessage', autoMessage);
       } catch (er) {
         console.error("Error fetching quote:", er);
       }

@@ -3,13 +3,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 // import { Server as SocketIO } from "socket.io"; 
-import socketMiddleware from "./midellwares/socketMiddleware.js";
+// import socketMiddleware from "./midellwares/socketMiddleware.js";
 import chatRouter from "./routes/chatRoutes.js";
 
 
 const app = express();
 
-app.use(socketMiddleware()); 
+
 app.use(cors());
 app.use(express.json());
 

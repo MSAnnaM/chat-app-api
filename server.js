@@ -9,8 +9,8 @@ const { PORT } = process.env;
 const startServer = async () => {
   try {
 
-      await connectMongo();
-      
+    await connectMongo();
+    
       const server = http.createServer(app);
       
     const io = new SocketIO(server, {
@@ -18,15 +18,18 @@ const startServer = async () => {
             origin: "*",
       },
     });
+    global.io = io;
 
     io.on("connection", (socket) => {
       console.log("New client connected");
+
+      socket.emit("message", "Welcome new client!");
 
       socket.on("disconnect", () => {
         console.log("Client disconnected");
       });
     });
-    app.use(socketMiddleware(io));
+    
 
     server.listen(PORT, () => {
       console.log(`Server is running. Use our API on port: ${PORT}`);
