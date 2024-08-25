@@ -27,7 +27,7 @@ export const newChatController = async (req, res, next) => {
 export const getAllChats = async (req, res, next) => {
   try {
     const { _id } = req.user || {};
-    console.log(_id);
+    console.log(req.user);
     
     if (_id) {
       const userChats = await Chat.find({ owner: _id });

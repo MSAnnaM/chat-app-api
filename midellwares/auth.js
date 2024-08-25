@@ -3,8 +3,8 @@ const ensureAuthenticated = (req, res, next) => {
         console.log(req.user);
         
         return next();
-    }  
-    return next() 
+    } else{ return next()} 
+    
 };  
 
 export default ensureAuthenticated
