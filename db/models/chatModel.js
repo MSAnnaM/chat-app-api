@@ -6,6 +6,7 @@ const ChatSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     messages: [{ text: String, sender: String, timestamp: Date }],
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   },
   { versionKey: false }
 );

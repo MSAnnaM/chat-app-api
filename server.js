@@ -2,7 +2,6 @@ import app from "./app.js";
 import connectMongo from "./db/connectMongo.js";
 import http from "http"; 
 import { Server as SocketIO } from "socket.io"; 
-import socketMiddleware from "./midellwares/socketMiddleware.js";
 
 const { PORT } = process.env;
 

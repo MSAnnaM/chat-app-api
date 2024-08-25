@@ -2,20 +2,34 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
-// import { Server as SocketIO } from "socket.io"; 
-// import socketMiddleware from "./midellwares/socketMiddleware.js";
+import passport from "passport";
+import session from "express-session";
+import "./helpers/passport.js";
+import authRoutes from "./routes/userRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
-
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    secret: process.env.GOOGLE_CLIENT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use(cors());
 app.use(express.json());
 
-
+app.use(authRoutes);
 app.use("/api/chats", chatRouter);
-
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });

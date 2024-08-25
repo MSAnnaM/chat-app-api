@@ -5,9 +5,15 @@ import HttpError from "../helpers/HttpError.js";
 export const newChatController = async (req, res, next) => {
   try {
     const { firstName, lastName } = req.body;
+    const {_id} = req.user || {};
     const existingChat = await Chat.findOne({ firstName });
     if (existingChat) {
       throw HttpError(409, "Chat already exists");
+    }
+
+    if (_id) {
+      const userChat = await Chat.create({ firstName, lastName, messages: [], owner: _id });
+      res.status(201).json(userChat);
     }
 
     const newChat = await Chat.create({ firstName, lastName, messages: [] });
@@ -20,8 +26,18 @@ export const newChatController = async (req, res, next) => {
 
 export const getAllChats = async (req, res, next) => {
   try {
-    const chats = await Chat.find({});
+    const { _id } = req.user || {};
+    console.log(_id);
+    
+    if (_id) {
+      const userChats = await Chat.find({ owner: _id });
+      res.status(200).json(userChats);
+    } else {
+      const chats = await Chat.find({owner: null});
     res.status(200).json(chats);
+    }
+    
+    
   } catch (er) {
     next(er);
     console.error(er);
