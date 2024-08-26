@@ -1,20 +1,19 @@
 import app from "./app.js";
 import connectMongo from "./db/connectMongo.js";
-import http from "http"; 
-import { Server as SocketIO } from "socket.io"; 
+import http from "http";
+import { Server as SocketIO } from "socket.io";
 
 const { PORT } = process.env;
 
 const startServer = async () => {
   try {
-
     await connectMongo();
-    
-      const server = http.createServer(app);
-      
+
+    const server = http.createServer(app);
+
     const io = new SocketIO(server, {
       cors: {
-            origin: "*",
+        origin: "*",
       },
     });
     global.io = io;
@@ -28,12 +27,10 @@ const startServer = async () => {
         console.log("Client disconnected");
       });
     });
-    
 
     server.listen(PORT, () => {
       console.log(`Server is running. Use our API on port: ${PORT}`);
     });
-
   } catch (err) {
     console.log(err);
   }

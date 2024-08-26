@@ -5,20 +5,28 @@ import HttpError from "../helpers/HttpError.js";
 export const newChatController = async (req, res, next) => {
   try {
     const { firstName, lastName } = req.body;
-    const {_id} = req.user || {};
+    const { _id } = req.user || {};
+
     const existingChat = await Chat.findOne({ firstName });
     if (existingChat) {
       throw HttpError(409, "Chat already exists");
     }
 
     if (_id) {
-      const userChat = await Chat.create({ firstName, lastName, messages: [], owner: _id });
+      const userChat = await Chat.create({
+        firstName,
+        lastName,
+        messages: [],
+        owner: _id,
+      });
       res.status(201).json(userChat);
-    }
-
-    const newChat = await Chat.create({ firstName, lastName, messages: [] });
+    } else {
+      const newChat = await Chat.create({ firstName, lastName, messages: [] });
 
     res.status(201).json(newChat);
+    }
+
+    
   } catch (er) {
     next(er);
   }
@@ -27,17 +35,16 @@ export const newChatController = async (req, res, next) => {
 export const getAllChats = async (req, res, next) => {
   try {
     const { _id } = req.user || {};
-    console.log(req.user);
-    
+
     if (_id) {
       const userChats = await Chat.find({ owner: _id });
+
       res.status(200).json(userChats);
     } else {
-      const chats = await Chat.find({owner: null});
-    res.status(200).json(chats);
+      const chats = await Chat.find({ owner: null });
+
+      res.status(200).json(chats);
     }
-    
-    
   } catch (er) {
     next(er);
     console.error(er);
@@ -99,32 +106,31 @@ export const sendMessage = async (req, res) => {
 
     setTimeout(async () => {
       try {
-        
-        const response = await fetch("https://api.api-ninjas.com/v1/quotes?category=happiness", {
-          method: 'GET',
-          headers: {
-            'X-Api-Key': "ZDpZREeSrK7uQjXLA8LwQQ==bnQM5ru2F9xUVmsQ", // Add your API key here  
-            'Content-Type': 'application/json', // Optional: specify the content type
+        const response = await fetch(
+          "https://api.api-ninjas.com/v1/quotes?category=happiness",
+          {
+            method: "GET",
+            headers: {
+              "X-Api-Key": "ZDpZREeSrK7uQjXLA8LwQQ==bnQM5ru2F9xUVmsQ",
+              "Content-Type": "application/json",
+            },
           }
-        });
-        // console.log(response.text);
+        );
+
         const data = await response.json();
-       
-        
-          const quote = data[0].quote;
-          
-          
+
+        const quote = data[0].quote;
+
         const autoMessage = {
           text: quote,
           sender: "Bot",
           timestamp: new Date(),
         };
 
-          chat.messages.push(autoMessage);
-          console.log(autoMessage);
-          
+        chat.messages.push(autoMessage);
+
         await chat.save();
-        global.io.emit('newMessage', autoMessage);
+        global.io.emit("newMessage", autoMessage);
       } catch (er) {
         console.error("Error fetching quote:", er);
       }
