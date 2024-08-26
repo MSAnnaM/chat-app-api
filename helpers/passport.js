@@ -29,6 +29,8 @@ passport.use(
           return done(null, existingUser);
         }
         const newProfile = profile._json;
+        console.log('google', newProfile);
+        
 
         const user = await new User({
           googleId: newProfile.sub,
