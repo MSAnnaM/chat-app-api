@@ -4,15 +4,7 @@ dotenv.config();
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User from "../db/models/userModel.js";
 
-passport.serializeUser((user, done) => {
 
-
-  done(null, user._id);
-});
-
-passport.deserializeUser((_id, done) => {
-  User.findById(_id).then((user) => done(null, user));
-});
 
 passport.use(
   new GoogleStrategy(
@@ -44,5 +36,15 @@ passport.use(
     }
   )
 );
+
+passport.serializeUser((user, done) => {
+
+
+  done(null, user._id);
+});
+
+passport.deserializeUser((_id, done) => {
+  User.findById(_id).then((user) => done(null, user));
+});
 
 
