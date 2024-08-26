@@ -21,6 +21,13 @@ app.use(
     secret: process.env.GOOGLE_CLIENT_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      domain: 'chat-app-api-production-8dc6.up.railway.app', 
+      secure: process.env.NODE_ENV === 'production', 
+      maxAge: 24 * 60 * 60 * 1000, 
+      sameSite: 'none', 
+      // httpOnly: true, 
+    },
   })
 );
 app.use(passport.initialize());
