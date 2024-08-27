@@ -15,7 +15,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://chat-application-two-mu.vercel.app",
     credentials: true,
   })
 );
