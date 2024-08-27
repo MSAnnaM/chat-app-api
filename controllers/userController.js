@@ -3,7 +3,7 @@ import User from "../db/models/userModel.js";
 export const getUser = async (req, res, next) => {
   try {
     const { _id } = req.user || {};
-    console.log(req.user);
+    // console.log(req.user);
     
 
     const user = await User.findById(_id);
